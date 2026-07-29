@@ -216,8 +216,42 @@ function AiAssistant() {
   );
 }
 
+function ContactChooser({ open, onClose }) {
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, onClose]);
+
+  return (
+    <div className={`contact-modal ${open ? "open" : ""}`} aria-hidden={!open} onMouseDown={(event) => {
+      if (event.target === event.currentTarget) onClose();
+    }}>
+      <div className="contact-dialog" role="dialog" aria-modal="true" aria-label="选择联系方式">
+        <div className="contact-dialog-head">
+          <div><small>CONTACT CHANNEL</small><h3>选择一种联系方式</h3></div>
+          <button onClick={onClose} aria-label="关闭联系方式">×</button>
+        </div>
+        <p>欢迎通过电话或邮件与我联系，我会尽快回复。</p>
+        <div className="contact-options">
+          <a href="tel:18079299867" onClick={onClose}>
+            <span>01 / PHONE</span><strong>18079299867</strong><small>点击拨打电话</small><b>↗</b>
+          </a>
+          <a href="mailto:18079299867@163.com" onClick={onClose}>
+            <span>02 / EMAIL</span><strong>18079299867@163.com</strong><small>使用邮箱联系</small><b>↗</b>
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const siteRef = useRef(null);
   const heroVideoRef = useRef(null);
   useEffect(() => {
@@ -341,7 +375,7 @@ export default function App() {
         <div className="nav-links">
           <a href="#about">关于</a><a href="#experience">经历</a><a href="#projects">项目</a><a href="#strengths">优势</a>
         </div>
-        <a className="nav-contact" href="#contact">联系我 <span>↗</span></a>
+        <button className="nav-contact" onClick={() => setContactOpen(true)}>联系我 <span>↗</span></button>
       </nav>
 
       <main>
@@ -355,7 +389,7 @@ export default function App() {
             <p>你好，我是李谨。<br />一名专注于 AI 产品与数据策略的产品实践者。</p>
             <div className="hero-actions">
               <a href="#projects">查看精选项目 <span>↓</span></a>
-              <a href="mailto:Liskoi0104@gmail.com">与我联系 <span>↗</span></a>
+              <button onClick={() => setContactOpen(true)}>与我联系 <span>↗</span></button>
             </div>
           </div>
           <div className="scroll-note"><span>SCROLL TO EXPLORE</span><i /></div>
@@ -388,8 +422,8 @@ export default function App() {
               <div className="details">
                 <div><small>目标岗位</small><strong>AI 产品经理 / 产品助理</strong></div>
                 <div><small>所在地</small><strong>杭州</strong></div>
-                <div><small>邮箱</small><strong>Liskoi0104@gmail.com</strong></div>
-                <div><small>电话</small><strong>180 7929 9867</strong></div>
+                <div><small>邮箱</small><strong>18079299867@163.com</strong></div>
+                <div><small>电话</small><strong>18079299867</strong></div>
                 <div><small>教育</small><strong>大数据工程技术 · 本科</strong></div>
               </div>
             </div>
@@ -471,14 +505,15 @@ export default function App() {
             <p>LET'S BUILD SOMETHING MEANINGFUL</p>
             <h2>期待与你一起，<br />让好想法<span>真正发生。</span></h2>
             <div className="contact-links">
-              <a href="mailto:Liskoi0104@gmail.com">Liskoi0104@gmail.com <b>↗</b></a>
-              <a href="tel:+8618079299867">+86 180 7929 9867 <b>↗</b></a>
+              <a href="mailto:18079299867@163.com">18079299867@163.com <b>↗</b></a>
+              <a href="tel:18079299867">18079299867 <b>↗</b></a>
             </div>
             <div><span>HANGZHOU · CHINA</span><span>AI PRODUCT / DATA STRATEGY</span><span>© 2026 LI JIN</span></div>
           </div>
         </section>
       </main>
       <AiAssistant />
+      <ContactChooser open={contactOpen} onClose={() => setContactOpen(false)} />
     </div>
   );
 }
